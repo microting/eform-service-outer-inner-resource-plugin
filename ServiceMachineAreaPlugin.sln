@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceMachineAreaPlugin", "ServiceMachineAreaPlugin\ServiceMachineAreaPlugin.csproj", "{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{33A61FED-685A-4A6A-A7F9-068D8E8B7C15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceMachineAreaPlugin.Integration.Test", "ServiceMachineAreaPlugin.Integration.Test\ServiceMachineAreaPlugin.Integration.Test.csproj", "{5F75A865-391F-4190-81E2-7ED8B5E135BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F75A865-391F-4190-81E2-7ED8B5E135BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F75A865-391F-4190-81E2-7ED8B5E135BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F75A865-391F-4190-81E2-7ED8B5E135BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F75A865-391F-4190-81E2-7ED8B5E135BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5F75A865-391F-4190-81E2-7ED8B5E135BD} = {33A61FED-685A-4A6A-A7F9-068D8E8B7C15}
+	EndGlobalSection
+EndGlobal
