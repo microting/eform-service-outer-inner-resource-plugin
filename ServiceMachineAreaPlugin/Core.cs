@@ -60,8 +60,8 @@ namespace ServiceMachineAreaPlugin
         {
             eFormShared.Case_Dto trigger = (eFormShared.Case_Dto)sender;
 
-            string CaseId = trigger.MicrotingUId;
-            _bus.SendLocal(new eFormCompleted(CaseId));
+            string microtingUId = trigger.MicrotingUId;
+            _bus.SendLocal(new eFormCompleted(microtingUId));
         }
 
         public void CaseDeleted(object sender, EventArgs args)
