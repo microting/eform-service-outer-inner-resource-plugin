@@ -6,7 +6,7 @@ if [ ! -d "/var/www/microting/eform-service-machinearea-plugin" ]; then
   "git clone https://github.com/microting/eform-service-machinearea-plugin.git -b stable"
 fi
 
-cd /var/www/microting/eform-service-trashinspection-plugin
+cd /var/www/microting/eform-angular-machinearea-plugin
 su ubuntu -c \
 "dotnet restore ServiceMachineAreaPlugin.sln"
 
