@@ -7,11 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Microting.eFormMachineAreaBase.Infrastructure.Data.Entities;
 using Rebus.Handlers;
-using ServiceMachineAreaPlugin.Messages;
 
 namespace ServiceMachineAreaPlugin.Handlers
 {
-    public class eFormCompletedHandler : IHandleMessages<eFormCompleted>
+    public class eFormCompletedHandler : IHandleMessages<ServiceMachineAreaPlugin.Messages.eFormCompleted>
     {
         private readonly eFormCore.Core _sdkCore;
         private readonly MachineAreaPnDbContext _dbContext;
@@ -22,20 +21,20 @@ namespace ServiceMachineAreaPlugin.Handlers
             _sdkCore = sdkCore;
         }
 
-        public async Task Handle(eFormCompleted message)
+        public async Task Handle(ServiceMachineAreaPlugin.Messages.eFormCompleted message)
         {
             #region get case information            
-            Case_Dto caseDto = _sdkCore.CaseLookupMUId(message.MicrotingUUID);
-            var microtingUId = caseDto.MicrotingUId;
-            var microtingCheckUId = caseDto.CheckUId;
-            ReplyElement theCase = _sdkCore.CaseRead(microtingUId, microtingCheckUId);
+            //Case_Dto caseDto = _sdkCore.CaseLookup(message.MicrotingUUID, message.CheckUId);
+            //var microtingUId = caseDto.MicrotingUId;
+            //var microtingCheckUId = caseDto.CheckUId;
+            ReplyElement theCase = _sdkCore.CaseRead(message.A, message.B);
             CheckListValue dataElement = (CheckListValue)theCase.ElementList[0];
             Console.WriteLine("Trying to find the field with the approval value");
             int registeredTime = 0;
             
             MachineAreaSite machineAreaSite =
                 _dbContext.MachineAreaSites.SingleOrDefault(x =>
-                    x.MicrotingSdkCaseId == int.Parse(message.MicrotingUUID));
+                    x.MicrotingSdkCaseId == int.Parse(message.A));
             
             MachineAreaTimeRegistration machineAreaTimeRegistration = new MachineAreaTimeRegistration();
             if (machineAreaSite != null)

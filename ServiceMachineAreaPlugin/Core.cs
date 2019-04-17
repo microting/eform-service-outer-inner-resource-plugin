@@ -4,13 +4,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using eFormCore.Installers;
 using Microsoft.EntityFrameworkCore;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Microting.eFormMachineAreaBase.Infrastructure.Data.Factories;
 using Microting.WindowsService.BasePn;
 using Rebus.Bus;
-using ServiceMachineAreaPlugin.Messages;
+using ServiceMachineAreaPlugin.Installers;
 
 namespace ServiceMachineAreaPlugin
 {
@@ -61,7 +60,8 @@ namespace ServiceMachineAreaPlugin
             eFormShared.Case_Dto trigger = (eFormShared.Case_Dto)sender;
 
             string microtingUId = trigger.MicrotingUId;
-            _bus.SendLocal(new eFormCompleted(microtingUId));
+            string checkUId = trigger.CheckUId;
+            _bus.SendLocal(new ServiceMachineAreaPlugin.Messages.eFormCompleted(microtingUId, checkUId));
         }
 
         public void CaseDeleted(object sender, EventArgs args)
@@ -76,7 +76,7 @@ namespace ServiceMachineAreaPlugin
 
         public bool Start(string sdkConnectionString, string serviceLocation)
         {
-            Console.WriteLine("TrashInspectionPlugin start called");
+            Console.WriteLine("ServiceMachineAreaPlugin start called");
             try
             {
                 string dbNameSection;
@@ -128,7 +128,7 @@ namespace ServiceMachineAreaPlugin
 
                     _bus = _container.Resolve<IBus>();
                 }
-                Console.WriteLine("TrashInspectionPlugin started");
+                Console.WriteLine("ServiceMachineAreaPlugin started");
                 return true;
             }
             catch(Exception ex)

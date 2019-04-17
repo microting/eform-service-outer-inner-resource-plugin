@@ -11,7 +11,7 @@ namespace ServiceMachineAreaPlugin.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IHandleMessages<eFormCompleted>>().ImplementedBy<eFormCompletedHandler>().LifestyleTransient());
+            container.Register(Component.For<IHandleMessages<ServiceMachineAreaPlugin.Messages.eFormCompleted>>().ImplementedBy<eFormCompletedHandler>().LifestyleTransient());
         }
     }
 }
