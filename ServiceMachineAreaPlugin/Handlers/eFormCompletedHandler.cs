@@ -24,25 +24,25 @@ namespace ServiceMachineAreaPlugin.Handlers
         public async Task Handle(ServiceMachineAreaPlugin.Messages.eFormCompleted message)
         {
             #region get case information            
-            //Case_Dto caseDto = _sdkCore.CaseLookup(message.MicrotingUUID, message.CheckUId);
+            Case_Dto caseDto = _sdkCore.CaseLookup(message.caseId, message.checkId);
             //var microtingUId = caseDto.MicrotingUId;
             //var microtingCheckUId = caseDto.CheckUId;
-            ReplyElement theCase = _sdkCore.CaseRead(message.A, message.B);
-            CheckListValue dataElement = (CheckListValue)theCase.ElementList[0];
+            ReplyElement replyElement = _sdkCore.CaseRead(message.caseId, message.checkId);
+            CheckListValue dataElement = (CheckListValue)replyElement.ElementList[0];
             Console.WriteLine("Trying to find the field with the approval value");
             int registeredTime = 0;
             
             MachineAreaSite machineAreaSite =
                 _dbContext.MachineAreaSites.SingleOrDefault(x =>
-                    x.MicrotingSdkCaseId == int.Parse(message.A));
+                    x.MicrotingSdkCaseId == int.Parse(message.caseId));
             
             MachineAreaTimeRegistration machineAreaTimeRegistration = new MachineAreaTimeRegistration();
             if (machineAreaSite != null)
             {
                 machineAreaTimeRegistration.AreaId = machineAreaSite.MachineArea.AreaId;
                 machineAreaTimeRegistration.MachineId = machineAreaSite.MachineArea.MachineId;
-                machineAreaTimeRegistration.DoneAt = theCase.DoneAt;
-                machineAreaTimeRegistration.SDKCaseId = theCase.Id;
+                machineAreaTimeRegistration.DoneAt = replyElement.DoneAt;
+                machineAreaTimeRegistration.SDKCaseId = (int)caseDto.CaseId;
                 machineAreaTimeRegistration.SDKSiteId = machineAreaSite.MicrotingSdkSiteId;
             }
 
@@ -54,7 +54,7 @@ namespace ServiceMachineAreaPlugin.Handlers
                     Console.WriteLine($"The field is {f.Label}");
                     FieldValue fv = f.FieldValues[0];
                     String fieldValue = fv.Value;
-                    registeredTime = int.Parse(fieldValue);
+                    registeredTime = int.Parse(fieldValue.Split("|")[3]);
                     Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
                     
                     machineAreaTimeRegistration.SDKFieldValueId = fv.Id;

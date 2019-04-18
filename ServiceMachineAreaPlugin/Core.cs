@@ -10,6 +10,7 @@ using Microting.eFormMachineAreaBase.Infrastructure.Data.Factories;
 using Microting.WindowsService.BasePn;
 using Rebus.Bus;
 using ServiceMachineAreaPlugin.Installers;
+using ServiceMachineAreaPlugin.Messages;
 
 namespace ServiceMachineAreaPlugin
 {
@@ -59,9 +60,9 @@ namespace ServiceMachineAreaPlugin
         {
             eFormShared.Case_Dto trigger = (eFormShared.Case_Dto)sender;
 
-            string microtingUId = trigger.MicrotingUId;
-            string checkUId = trigger.CheckUId;
-            _bus.SendLocal(new ServiceMachineAreaPlugin.Messages.eFormCompleted(microtingUId, checkUId));
+            string CaseId = trigger.MicrotingUId;
+            string checkId = trigger.CheckUId;
+            _bus.SendLocal(new eFormCompleted(CaseId, checkId));
         }
 
         public void CaseDeleted(object sender, EventArgs args)

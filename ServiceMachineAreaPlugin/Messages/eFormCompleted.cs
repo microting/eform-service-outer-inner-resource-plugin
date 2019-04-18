@@ -2,13 +2,13 @@ namespace ServiceMachineAreaPlugin.Messages
 {
     public class eFormCompleted
     {
-        public string A { get; protected set; }
-        public string B { get; protected set; }
+        public string caseId { get; protected set; }
+        public string checkId { get; protected set; }
 
-        public eFormCompleted(string microtingUId, string checkUId)
+        public eFormCompleted(string caseId, string checkId)
         {
-            A = microtingUId;
-            B = checkUId;
+            this.caseId = caseId;
+            this.checkId = checkId;
         }
     }
 }
