@@ -49,7 +49,7 @@ namespace ServiceMachineAreaPlugin.Handlers
             foreach (var field in dataElement.DataItemList)
             {
                 Field f = (Field) field;
-                if (f.Label.Contains("Start/Stop tid"))
+                if (f.Label.ToLower().Contains("start/stop tid"))
                 {
                     Console.WriteLine($"The field is {f.Label}");
                     FieldValue fv = f.FieldValues[0];
