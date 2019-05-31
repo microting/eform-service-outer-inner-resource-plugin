@@ -54,6 +54,7 @@ namespace ServiceMachineAreaPlugin.Handlers
                     Console.WriteLine($"The field is {f.Label}");
                     FieldValue fv = f.FieldValues[0];
                     String fieldValue = fv.Value;
+                    Console.WriteLine($"Current field_value is {fieldValue}");
                     registeredTime = int.Parse(fieldValue.Split("|")[3]);
                     Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
                     
