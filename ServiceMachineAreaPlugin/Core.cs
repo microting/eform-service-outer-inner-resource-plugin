@@ -25,6 +25,7 @@ using System.Threading;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Microsoft.EntityFrameworkCore;
+using Microting.eForm.Dto;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Microting.eFormMachineAreaBase.Infrastructure.Data.Factories;
 using Microting.WindowsService.BasePn;
@@ -78,7 +79,7 @@ namespace ServiceMachineAreaPlugin
 
         public void CaseCompleted(object sender, EventArgs args)
         {
-            eFormShared.Case_Dto trigger = (eFormShared.Case_Dto)sender;
+            Case_Dto trigger = (Case_Dto)sender;
 
             string CaseId = trigger.MicrotingUId;
             string checkId = trigger.CheckUId;

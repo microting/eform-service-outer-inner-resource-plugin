@@ -21,9 +21,8 @@ SOFTWARE.
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using eFormData;
-using eFormShared;
-using Microsoft.EntityFrameworkCore;
+using Microting.eForm.Dto;
+using Microting.eForm.Infrastructure.Models;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Microting.eFormMachineAreaBase.Infrastructure.Data.Entities;
 using Rebus.Handlers;
@@ -86,7 +85,7 @@ namespace ServiceMachineAreaPlugin.Handlers
             }
             #endregion
 
-            await machineAreaTimeRegistration.Save(_dbContext);
+            await machineAreaTimeRegistration.Create(_dbContext);
         }
     }
 }
