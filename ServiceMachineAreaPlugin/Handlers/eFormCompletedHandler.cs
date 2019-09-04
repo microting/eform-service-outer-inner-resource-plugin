@@ -21,6 +21,7 @@ SOFTWARE.
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
@@ -44,48 +45,51 @@ namespace ServiceMachineAreaPlugin.Handlers
         {
             #region get case information            
             Case_Dto caseDto = _sdkCore.CaseLookup(message.caseId, message.checkId);
-            //var microtingUId = caseDto.MicrotingUId;
-            //var microtingCheckUId = caseDto.CheckUId;
             ReplyElement replyElement = _sdkCore.CaseRead(message.caseId, message.checkId);
-            CheckListValue dataElement = (CheckListValue)replyElement.ElementList[0];
-            Console.WriteLine("Trying to find the field with the approval value");
-            int registeredTime = 0;
-            
+
             MachineAreaSite machineAreaSite =
                 _dbContext.MachineAreaSites.SingleOrDefault(x =>
                     x.MicrotingSdkCaseId == int.Parse(message.caseId));
             
-            MachineAreaTimeRegistration machineAreaTimeRegistration = new MachineAreaTimeRegistration();
-            if (machineAreaSite != null)
-            {
-                machineAreaTimeRegistration.AreaId = machineAreaSite.MachineArea.AreaId;
-                machineAreaTimeRegistration.MachineId = machineAreaSite.MachineArea.MachineId;
-                machineAreaTimeRegistration.DoneAt = replyElement.DoneAt;
-                machineAreaTimeRegistration.SDKCaseId = (int)caseDto.CaseId;
-                machineAreaTimeRegistration.SDKSiteId = machineAreaSite.MicrotingSdkSiteId;
-            }
+            MachineAreaTimeRegistration machineAreaTimeRegistration = await _dbContext.MachineAreaTimeRegistrations.SingleOrDefaultAsync(x =>
+                x.DoneAt == replyElement.DoneAt && x.SDKCaseId == (int) caseDto.CaseId &&
+                x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId);
 
-            foreach (var field in dataElement.DataItemList)
+            if (machineAreaTimeRegistration == null)
             {
-                Field f = (Field) field;
-                if (f.Label.ToLower().Contains("start/stop tid"))
+                machineAreaTimeRegistration = new MachineAreaTimeRegistration();
+                if (machineAreaSite != null)
                 {
-                    Console.WriteLine($"The field is {f.Label}");
-                    FieldValue fv = f.FieldValues[0];
-                    String fieldValue = fv.Value;
-                    Console.WriteLine($"Current field_value is {fieldValue}");
-                    registeredTime = int.Parse(fieldValue.Split("|")[3]);
-                    Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
-                    
-                    machineAreaTimeRegistration.SDKFieldValueId = fv.Id;
-                    machineAreaTimeRegistration.TimeInSeconds = (registeredTime / 1000);
-                    machineAreaTimeRegistration.TimeInMinutes = ((registeredTime / 1000) / 60);
-                    machineAreaTimeRegistration.TimeInHours = ((registeredTime / 1000) / 3600);
+                    machineAreaTimeRegistration.AreaId = machineAreaSite.MachineArea.AreaId;
+                    machineAreaTimeRegistration.MachineId = machineAreaSite.MachineArea.MachineId;
+                    machineAreaTimeRegistration.DoneAt = replyElement.DoneAt;
+                    if (caseDto.CaseId != null) machineAreaTimeRegistration.SDKCaseId = (int) caseDto.CaseId;
+                    machineAreaTimeRegistration.SDKSiteId = machineAreaSite.MicrotingSdkSiteId;
                 }
-            }
-            #endregion
 
-            await machineAreaTimeRegistration.Create(_dbContext);
+                CheckListValue dataElement = (CheckListValue)replyElement.ElementList[0];
+                foreach (var field in dataElement.DataItemList)
+                {
+                    Field f = (Field) field;
+                    if (f.Label.ToLower().Contains("start/stop tid"))
+                    {
+                        Console.WriteLine($"The field is {f.Label}");
+                        FieldValue fv = f.FieldValues[0];
+                        String fieldValue = fv.Value;
+                        Console.WriteLine($"Current field_value is {fieldValue}");
+                        int registeredTime = int.Parse(fieldValue.Split("|")[3]);
+                        Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
+                    
+                        machineAreaTimeRegistration.SDKFieldValueId = fv.Id;
+                        machineAreaTimeRegistration.TimeInSeconds = (registeredTime / 1000);
+                        machineAreaTimeRegistration.TimeInMinutes = ((registeredTime / 1000) / 60);
+                        machineAreaTimeRegistration.TimeInHours = ((registeredTime / 1000) / 3600);
+                    }
+                }
+                #endregion
+
+                await machineAreaTimeRegistration.Create(_dbContext);
+            }
         }
     }
 }
