@@ -20,6 +20,7 @@ SOFTWARE.
 
 using System;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Castle.MicroKernel.Registration;
@@ -47,8 +48,8 @@ namespace ServiceMachineAreaPlugin
         private bool _coreStatChanging = false;
         private bool _coreAvailable = false;
         private string _serviceLocation;
-        private readonly int _maxParallelism = 1;
-        private readonly int _numberOfWorkers = 1;
+        private int _maxParallelism = 1;
+        private int _numberOfWorkers = 1;
         private MachineAreaPnDbContext _dbContext;
         #endregion
         
@@ -138,6 +139,14 @@ namespace ServiceMachineAreaPlugin
                     _coreStatChanging = false;
 
                     startSdkCoreSqlOnly(sdkConnectionString);
+                    
+                    string temp = _dbContext.PluginConfigurationValues
+                        .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:MaxParallelism")?.Value;
+                    _maxParallelism = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
+
+                    temp = _dbContext.PluginConfigurationValues
+                        .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:NumberOfWorkers")?.Value;
+                    _numberOfWorkers = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
 
                     _container = new WindsorContainer();
                     _container.Register(Component.For<MachineAreaPnDbContext>().Instance(_dbContext));
@@ -147,8 +156,17 @@ namespace ServiceMachineAreaPlugin
                         , new RebusInstaller(connectionString, _maxParallelism, _numberOfWorkers)
                     );
 
-
                     _bus = _container.Resolve<IBus>();
+                    
+                    temp = _dbContext.PluginConfigurationValues
+                        .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:ShouldCheckAllCases")?.Value;
+
+                    if (temp == "true")
+                    {
+                        temp = _dbContext.PluginConfigurationValues
+                            .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:SdkeFormId")?.Value;
+                        _bus.SendLocal(new CheckAllCases(int.Parse(temp)));
+                    }
                 }
                 Console.WriteLine("ServiceMachineAreaPlugin started");
                 return true;

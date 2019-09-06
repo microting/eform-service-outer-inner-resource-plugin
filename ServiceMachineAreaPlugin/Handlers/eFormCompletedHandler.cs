@@ -51,8 +51,10 @@ namespace ServiceMachineAreaPlugin.Handlers
                 _dbContext.MachineAreaSites.SingleOrDefault(x =>
                     x.MicrotingSdkCaseId == int.Parse(message.caseId));
             
-            MachineAreaTimeRegistration machineAreaTimeRegistration = await _dbContext.MachineAreaTimeRegistrations.SingleOrDefaultAsync(x =>
-                x.DoneAt == replyElement.DoneAt && x.SDKCaseId == (int) caseDto.CaseId &&
+            MachineAreaTimeRegistration machineAreaTimeRegistration = 
+                await _dbContext.MachineAreaTimeRegistrations.SingleOrDefaultAsync(x =>
+                x.DoneAt == replyElement.DoneAt && 
+                x.SDKCaseId == (int) caseDto.CaseId &&
                 x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId);
 
             if (machineAreaTimeRegistration == null)
