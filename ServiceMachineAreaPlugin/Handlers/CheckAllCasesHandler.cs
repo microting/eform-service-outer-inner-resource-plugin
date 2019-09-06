@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microting.eForm.Dto;
@@ -27,8 +28,17 @@ namespace ServiceMachineAreaPlugin.Handlers
 
             foreach (Case @case in list)
             {
+                WriteLogEntry($"CheckAllCasesHandler.Handle: Dispatching eFormCompleted for @case.MicrotingUId {@case.MicrotingUId} @case.CheckUIid {@case.CheckUIid}");
                 await _bus.SendLocal(new eFormCompleted(@case.MicrotingUId, @case.CheckUIid));
             }
+        }
+
+        private void WriteLogEntry(string message)
+        {
+            var oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("[DBG] " + message);
+            Console.ForegroundColor = oldColor;
         }
     }
 }

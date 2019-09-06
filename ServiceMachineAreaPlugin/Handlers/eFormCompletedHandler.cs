@@ -43,7 +43,9 @@ namespace ServiceMachineAreaPlugin.Handlers
 
         public async Task Handle(ServiceMachineAreaPlugin.Messages.eFormCompleted message)
         {
-            #region get case information            
+            #region get case information
+
+            WriteLogEntry($"eFormCompletedHandler.Handle: we got called for message.caseId {message.caseId} and message.checkId {message.checkId}");
             Case_Dto caseDto = _sdkCore.CaseLookup(message.caseId, message.checkId);
             ReplyElement replyElement = _sdkCore.CaseRead(message.caseId, message.checkId);
 
@@ -92,6 +94,14 @@ namespace ServiceMachineAreaPlugin.Handlers
 
                 await machineAreaTimeRegistration.Create(_dbContext);
             }
+        }
+
+        private void WriteLogEntry(string message)
+        {
+            var oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("[DBG] " + message);
+            Console.ForegroundColor = oldColor;
         }
     }
 }
