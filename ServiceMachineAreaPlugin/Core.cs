@@ -163,7 +163,7 @@ namespace ServiceMachineAreaPlugin
                     
                     Console.WriteLine("[DBG] ServiceMachineAreaPlugin.Start: ShouldCheckAllCases set to: " + temp);
 
-                    if (temp == "true")
+                    if (temp.ToLower() == "true")
                     {
                         temp = _dbContext.PluginConfigurationValues
                             .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:SdkeFormId")?.Value;
