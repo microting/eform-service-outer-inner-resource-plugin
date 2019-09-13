@@ -160,11 +160,15 @@ namespace ServiceMachineAreaPlugin
                     
                     temp = _dbContext.PluginConfigurationValues
                         .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:ShouldCheckAllCases")?.Value;
+                    
+                    Console.WriteLine("[DBG] ServiceMachineAreaPlugin.Start: ShouldCheckAllCases set to: " + temp);
 
                     if (temp == "true")
                     {
                         temp = _dbContext.PluginConfigurationValues
                             .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:SdkeFormId")?.Value;
+                        
+                        Console.WriteLine("[DBG] ServiceMachineAreaPlugin.Start: SdkeFormId set to: " + temp);
                         _bus.SendLocal(new CheckAllCases(int.Parse(temp)));
                     }
                 }
@@ -174,7 +178,7 @@ namespace ServiceMachineAreaPlugin
             catch(Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("Start failed " + ex.Message);
+                Console.WriteLine("[ERR] ServiceMachineAreaPlugin.Start: Start failed " + ex.Message);
                 throw ex;
             }
         }

@@ -24,7 +24,9 @@ namespace ServiceMachineAreaPlugin.Handlers
         
         public async Task Handle(CheckAllCases message)
         {
+            Console.WriteLine("[DBG] CheckAllCasesHandler.Handle: called");
             List<Case> list = _sdkCore.CaseReadAll(message.eFormId, null, null);
+            Console.WriteLine($"[DBG] CheckAllCasesHandler.Handle: CaseReadAll returned number of cases: {list.Count}");
 
             foreach (Case @case in list)
             {
