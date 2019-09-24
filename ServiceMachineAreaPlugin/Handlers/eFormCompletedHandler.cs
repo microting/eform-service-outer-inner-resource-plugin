@@ -51,7 +51,7 @@ namespace ServiceMachineAreaPlugin.Handlers
 
             MachineAreaSite machineAreaSite =
                 _dbContext.MachineAreaSites.SingleOrDefault(x =>
-                    x.MicrotingSdkCaseId == int.Parse(message.caseId));
+                    x.MicrotingSdkCaseId == message.caseId);
             
             MachineAreaTimeRegistration machineAreaTimeRegistration = 
                 await _dbContext.MachineAreaTimeRegistrations.SingleOrDefaultAsync(x =>

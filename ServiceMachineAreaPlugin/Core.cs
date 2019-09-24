@@ -82,9 +82,11 @@ namespace ServiceMachineAreaPlugin
         {
             Case_Dto trigger = (Case_Dto)sender;
 
-            string CaseId = trigger.MicrotingUId;
-            string checkId = trigger.CheckUId;
-            _bus.SendLocal(new eFormCompleted(CaseId, checkId));
+            int? caseId = trigger.MicrotingUId;
+            int? checkId = trigger.CheckUId;
+            if (checkId != null && caseId != null) {
+                _bus.SendLocal(new eFormCompleted((int) caseId, (int) checkId));
+            }
         }
 
         public void CaseDeleted(object sender, EventArgs args)

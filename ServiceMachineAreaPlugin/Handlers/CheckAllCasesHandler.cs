@@ -31,7 +31,10 @@ namespace ServiceMachineAreaPlugin.Handlers
             foreach (Case @case in list)
             {
                 WriteLogEntry($"CheckAllCasesHandler.Handle: Dispatching eFormCompleted for @case.MicrotingUId {@case.MicrotingUId} @case.CheckUIid {@case.CheckUIid}");
-                await _bus.SendLocal(new eFormCompleted(@case.MicrotingUId, @case.CheckUIid));
+                if (@case.MicrotingUId != null && @case.CheckUIid != null)
+                {
+                    await _bus.SendLocal(new eFormCompleted((int) @case.MicrotingUId, (int) @case.CheckUIid));
+                }
             }
         }
 

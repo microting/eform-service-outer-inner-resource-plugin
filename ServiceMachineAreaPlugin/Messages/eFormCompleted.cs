@@ -22,10 +22,10 @@ namespace ServiceMachineAreaPlugin.Messages
 {
     public class eFormCompleted
     {
-        public string caseId { get; protected set; }
-        public string checkId { get; protected set; }
+        public int caseId { get; protected set; }
+        public int checkId { get; protected set; }
 
-        public eFormCompleted(string caseId, string checkId)
+        public eFormCompleted(int caseId, int checkId)
         {
             this.caseId = caseId;
             this.checkId = checkId;
