@@ -22,3 +22,4 @@ su ubuntu -c \
 
 su ubuntu -c \
 "cp -av /var/www/microting/eform-service-machinearea-plugin/ServiceMachineAreaPlugin/out /var/www/microting/eform-debian-service/MicrotingService/MicrotingService/out/Plugins/ServiceMachineAreaPlugin"
+./rabbitmqadmin declare queue name=eform-service-machinearea-plugin durable=true
