@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceOuterInnerResourcePl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{33A61FED-685A-4A6A-A7F9-068D8E8B7C15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceMachineAreaPlugin.Integration.Test", "ServiceMachineAreaPlugin.Integration.Test\ServiceMachineAreaPlugin.Integration.Test.csproj", "{5F75A865-391F-4190-81E2-7ED8B5E135BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceOuterInnerResourcePlugin.Integration.Test", "ServiceOuterInnerResourcePlugin.Integration.Test\ServiceOuterInnerResourcePlugin.Integration.Test.csproj", "{5F75A865-391F-4190-81E2-7ED8B5E135BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
