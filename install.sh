@@ -22,4 +22,4 @@ su ubuntu -c \
 
 su ubuntu -c \
 "cp -av /var/www/microting/eform-service-OuterInnerResource-plugin/ServiceOuterInnerResourcePlugin/out /var/www/microting/eform-debian-service/MicrotingService/MicrotingService/out/Plugins/ServiceOuterInnerResourcePlugin"
-./rabbitmqadmin declare queue name=eform-service-OuterInnerResource-plugin durable=true
+./rabbitmqadmin declare queue name=eform-service-outer-inner-resource-plugin durable=true

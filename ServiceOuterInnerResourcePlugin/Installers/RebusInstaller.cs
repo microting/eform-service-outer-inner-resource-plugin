@@ -44,7 +44,7 @@ namespace ServiceOuterInnerResourcePlugin.Installers
         {
             Configure.With(new CastleWindsorContainerAdapter(container))
                 .Logging(l => l.ColoredConsole())
-                .Transport(t => t.UseRabbitMq("amqp://admin:password@localhost", "eform-service-machinearea-plugin"))
+                .Transport(t => t.UseRabbitMq("amqp://admin:password@localhost", "eform-service-outer-inner-resource-plugin"))
                 .Options(o =>
                 {
                     o.SetMaxParallelism(maxParallelism);
