@@ -27,10 +27,11 @@ using Microting.eForm.Infrastructure.Models;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Microting.eFormMachineAreaBase.Infrastructure.Data.Entities;
 using Rebus.Handlers;
+using ServiceOuterInnerResourcePlugin.Messages;
 
-namespace ServiceMachineAreaPlugin.Handlers
+namespace ServiceOuterInnerResourcePlugin.Handlers
 {
-    public class eFormCompletedHandler : IHandleMessages<ServiceMachineAreaPlugin.Messages.eFormCompleted>
+    public class eFormCompletedHandler : IHandleMessages<eFormCompleted>
     {
         private readonly eFormCore.Core _sdkCore;
         private readonly MachineAreaPnDbContext _dbContext;
@@ -41,7 +42,7 @@ namespace ServiceMachineAreaPlugin.Handlers
             _sdkCore = sdkCore;
         }
 
-        public async Task Handle(ServiceMachineAreaPlugin.Messages.eFormCompleted message)
+        public async Task Handle(eFormCompleted message)
         {
             #region get case information
 

@@ -22,17 +22,17 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Rebus.Handlers;
-using ServiceMachineAreaPlugin.Handlers;
-using ServiceMachineAreaPlugin.Messages;
+using ServiceOuterInnerResourcePlugin.Handlers;
+using ServiceOuterInnerResourcePlugin.Messages;
 
-namespace ServiceMachineAreaPlugin.Installers
+namespace ServiceOuterInnerResourcePlugin.Installers
 {
     public class RebusHandlerInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IHandleMessages<ServiceMachineAreaPlugin.Messages.eFormCompleted>>().ImplementedBy<eFormCompletedHandler>().LifestyleTransient());
-            container.Register(Component.For<IHandleMessages<ServiceMachineAreaPlugin.Messages.CheckAllCases>>().ImplementedBy<CheckAllCasesHandler>().LifestyleTransient());
+            container.Register(Component.For<IHandleMessages<eFormCompleted>>().ImplementedBy<eFormCompletedHandler>().LifestyleTransient());
+            container.Register(Component.For<IHandleMessages<CheckAllCases>>().ImplementedBy<CheckAllCasesHandler>().LifestyleTransient());
         }
     }
 }

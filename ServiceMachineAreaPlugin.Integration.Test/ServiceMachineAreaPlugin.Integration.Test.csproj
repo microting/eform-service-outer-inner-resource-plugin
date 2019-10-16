@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ServiceMachineAreaPlugin\ServiceMachineAreaPlugin.csproj" />
+      <ProjectReference Include="..\ServiceOuterInnerResourcePlugin\ServiceOuterInnerResourcePlugin.csproj" />
     </ItemGroup>
 
 </Project>

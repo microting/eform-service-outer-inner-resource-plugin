@@ -24,7 +24,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Rebus.Config;
 
-namespace ServiceMachineAreaPlugin.Installers
+namespace ServiceOuterInnerResourcePlugin.Installers
 {
     public class RebusInstaller: IWindsorInstaller
     {

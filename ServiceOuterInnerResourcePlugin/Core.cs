@@ -31,10 +31,10 @@ using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Microting.eFormMachineAreaBase.Infrastructure.Data.Factories;
 using Microting.WindowsService.BasePn;
 using Rebus.Bus;
-using ServiceMachineAreaPlugin.Installers;
-using ServiceMachineAreaPlugin.Messages;
+using ServiceOuterInnerResourcePlugin.Installers;
+using ServiceOuterInnerResourcePlugin.Messages;
 
-namespace ServiceMachineAreaPlugin
+namespace ServiceOuterInnerResourcePlugin
 {
     [Export(typeof(ISdkEventHandler))]
     public class Core : ISdkEventHandler
@@ -101,7 +101,7 @@ namespace ServiceMachineAreaPlugin
 
         public bool Start(string sdkConnectionString, string serviceLocation)
         {
-            Console.WriteLine("ServiceMachineAreaPlugin start called");
+            Console.WriteLine("ServiceOuterInnerResourcePlugin start called");
             try
             {
                 string dbNameSection;
@@ -117,7 +117,7 @@ namespace ServiceMachineAreaPlugin
                 }
                 
                 
-                string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-machinearea-plugin;";
+                string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-outer-inner-resource-plugin;";
                 string connectionString = sdkConnectionString.Replace(dbNameSection, pluginDbName);
 
 
@@ -143,11 +143,11 @@ namespace ServiceMachineAreaPlugin
                     startSdkCoreSqlOnly(sdkConnectionString);
                     
                     string temp = _dbContext.PluginConfigurationValues
-                        .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:MaxParallelism")?.Value;
+                        .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:MaxParallelism")?.Value;
                     _maxParallelism = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
 
                     temp = _dbContext.PluginConfigurationValues
-                        .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:NumberOfWorkers")?.Value;
+                        .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:NumberOfWorkers")?.Value;
                     _numberOfWorkers = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
 
                     _container = new WindsorContainer();
@@ -161,26 +161,26 @@ namespace ServiceMachineAreaPlugin
                     _bus = _container.Resolve<IBus>();
                     
                     temp = _dbContext.PluginConfigurationValues
-                        .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:ShouldCheckAllCases")?.Value;
+                        .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:ShouldCheckAllCases")?.Value;
                     
-                    Console.WriteLine("[DBG] ServiceMachineAreaPlugin.Start: ShouldCheckAllCases set to: " + temp);
+                    Console.WriteLine("[DBG] ServiceOuterInnerResourcePlugin.Start: ShouldCheckAllCases set to: " + temp);
 
                     if (temp.ToLower() == "true")
                     {
                         temp = _dbContext.PluginConfigurationValues
-                            .SingleOrDefault(x => x.Name == "MachineAreaBaseSettings:SdkeFormId")?.Value;
+                            .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:SdkeFormId")?.Value;
                         
-                        Console.WriteLine("[DBG] ServiceMachineAreaPlugin.Start: SdkeFormId set to: " + temp);
+                        Console.WriteLine("[DBG] ServiceOuterInnerResourcePlugin.Start: SdkeFormId set to: " + temp);
                         _bus.SendLocal(new CheckAllCases(int.Parse(temp)));
                     }
                 }
-                Console.WriteLine("ServiceMachineAreaPlugin started");
+                Console.WriteLine("ServiceOuterInnerResourcePlugin started");
                 return true;
             }
             catch(Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("[ERR] ServiceMachineAreaPlugin.Start: Start failed " + ex.Message);
+                Console.WriteLine("[ERR] ServiceOuterInnerResourcePlugin.Start: Start failed " + ex.Message);
                 throw ex;
             }
         }

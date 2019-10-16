@@ -5,9 +5,9 @@ using Microting.eForm.Dto;
 using Microting.eFormMachineAreaBase.Infrastructure.Data;
 using Rebus.Bus;
 using Rebus.Handlers;
-using ServiceMachineAreaPlugin.Messages;
+using ServiceOuterInnerResourcePlugin.Messages;
 
-namespace ServiceMachineAreaPlugin.Handlers
+namespace ServiceOuterInnerResourcePlugin.Handlers
 {
     public class CheckAllCasesHandler : IHandleMessages<CheckAllCases>
     {

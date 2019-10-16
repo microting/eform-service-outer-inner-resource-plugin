@@ -5,10 +5,13 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>../../MicrotingService/bin/Debug/Plugins/ServiceMachineAreaPlugin</OutputPath>
+      <OutputPath>../../MicrotingService/bin/Debug/Plugins/ServiceOuterInnerResourcePlugin</OutputPath>
     </PropertyGroup>
     <PropertyGroup>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>../../MicrotingService/bin/Debug/Plugins/ServiceOuterInnerResourcePlugin</OutputPath>
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />

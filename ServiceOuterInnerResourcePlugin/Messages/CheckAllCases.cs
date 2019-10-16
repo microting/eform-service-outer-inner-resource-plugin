@@ -1,4 +1,4 @@
-namespace ServiceMachineAreaPlugin.Messages
+namespace ServiceOuterInnerResourcePlugin.Messages
 {
     public class CheckAllCases
     {

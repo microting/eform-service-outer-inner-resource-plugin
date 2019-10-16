@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceMachineAreaPlugin", "ServiceMachineAreaPlugin\ServiceMachineAreaPlugin.csproj", "{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceOuterInnerResourcePlugin", "ServiceOuterInnerResourcePlugin\ServiceOuterInnerResourcePlugin.csproj", "{9A0183D5-20E3-4D6B-BFDF-0EDE570D4EDD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{33A61FED-685A-4A6A-A7F9-068D8E8B7C15}"
 EndProject
