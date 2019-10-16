@@ -3,12 +3,12 @@ branches:
   only:
     - master
 language: csharp
-solution: ServiceMachineAreaPlugin.sln
+solution: ServiceOuterInnerResourcePlugin.sln
 mono: none
 dotnet: 2.2
 services:
 - mysql
 script:
   - dotnet restore
-  - dotnet build ServiceMachineAreaPlugin.sln
-  - dotnet test -v n ServiceMachineAreaPlugin.Integration.Test/ServiceMachineAreaPlugin.Integration.Test.csproj
+  - dotnet build ServiceOuterInnerResourcePlugin.sln
+  - dotnet test -v n ServiceOuterInnerResourcePlugin.Integration.Test/ServiceOuterInnerResourcePlugin.Integration.Test.csproj
