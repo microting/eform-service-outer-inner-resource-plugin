@@ -21,5 +21,5 @@ su ubuntu -c \
 "mkdir -p /var/www/microting/eform-debian-service/MicrotingService/MicrotingService/out/Plugins/"
 
 su ubuntu -c \
-"cp -av /var/www/microting/eform-service-OuterInnerResource-plugin/ServiceOuterInnerResourcePlugin/out /var/www/microting/eform-debian-service/MicrotingService/MicrotingService/out/Plugins/ServiceOuterInnerResourcePlugin"
+"cp -av /var/www/microting/eform-service-outer-inner-resource-plugin/ServiceOuterInnerResourcePlugin/out /var/www/microting/eform-debian-service/MicrotingService/out/Plugins/ServiceOuterInnerResourcePlugin"
 ./rabbitmqadmin declare queue name=eform-service-outer-inner-resource-plugin durable=true
