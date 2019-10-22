@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microting.eForm.Dto;
-using Microting.eFormMachineAreaBase.Infrastructure.Data;
+using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Rebus.Bus;
 using Rebus.Handlers;
 using ServiceOuterInnerResourcePlugin.Messages;
@@ -12,10 +12,10 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
     public class CheckAllCasesHandler : IHandleMessages<CheckAllCases>
     {
         private readonly eFormCore.Core _sdkCore;
-        private readonly MachineAreaPnDbContext _dbContext;
+        private readonly OuterInnerResourcePnDbContext _dbContext;
         private readonly IBus _bus;
 
-        public CheckAllCasesHandler(eFormCore.Core sdkCore, MachineAreaPnDbContext dbContext, IBus bus)
+        public CheckAllCasesHandler(eFormCore.Core sdkCore, OuterInnerResourcePnDbContext dbContext, IBus bus)
         {
             _dbContext = dbContext;
             _sdkCore = sdkCore;

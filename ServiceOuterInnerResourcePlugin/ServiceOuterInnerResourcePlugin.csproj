@@ -16,7 +16,6 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
       <PackageReference Include="Microting.eForm" Version="3.0.332" />
-      <PackageReference Include="Microting.eFormMachineAreaBase" Version="1.1.74" />
       <PackageReference Include="Microting.eFormOuterInnerResourceBase" Version="1.1.74" />
       <PackageReference Include="Microting.WindowsService.BasePn" Version="1.1.13" />
       <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
