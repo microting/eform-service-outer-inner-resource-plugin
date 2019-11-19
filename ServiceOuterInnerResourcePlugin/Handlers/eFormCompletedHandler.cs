@@ -47,8 +47,8 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
             #region get case information
 
             WriteLogEntry($"eFormCompletedHandler.Handle: we got called for message.caseId {message.caseId} and message.checkId {message.checkId}");
-            Case_Dto caseDto = _sdkCore.CaseLookup(message.caseId, message.checkId);
-            ReplyElement replyElement = _sdkCore.CaseRead(message.caseId, message.checkId);
+            Case_Dto caseDto = await _sdkCore.CaseLookup(message.caseId, message.checkId);
+            ReplyElement replyElement = await _sdkCore.CaseRead(message.caseId, message.checkId);
 
             OuterInnerResourceSite machineAreaSite =
                 _dbContext.OuterInnerResourceSites.SingleOrDefault(x =>
