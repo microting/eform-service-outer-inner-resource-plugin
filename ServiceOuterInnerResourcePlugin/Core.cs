@@ -80,7 +80,7 @@ namespace ServiceOuterInnerResourcePlugin
 
         public void CaseCompleted(object sender, EventArgs args)
         {
-            Case_Dto trigger = (Case_Dto)sender;
+            CaseDto trigger = (CaseDto)sender;
 
             int? caseId = trigger.MicrotingUId;
             int? checkId = trigger.CheckUId;
