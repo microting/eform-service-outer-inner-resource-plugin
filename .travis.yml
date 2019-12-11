@@ -1,7 +1,4 @@
 dist: xenial
-branches:
-  only:
-    - master
 language: csharp
 solution: ServiceOuterInnerResourcePlugin.sln
 mono: none
