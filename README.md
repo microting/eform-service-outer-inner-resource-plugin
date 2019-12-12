@@ -1,8 +1,17 @@
-# eform-service-machinearea-plugin
+# eform-service-outer-inner-resource-plugin
 
-[![Build Status](https://travis-ci.org/microting/eform-service-machinearea-plugin.svg?branch=master)](https://travis-ci.org/microting/eform-service-machinearea-plugin)
+[![Build Status](https://travis-ci.org/microting/eform-service-outer-inner-resource-plugin.svg?branch=master)](https://travis-ci.org/microting/eform-service-outer-inner-resource-plugin)
 
 ## WARNINIG! NOT TO BE USED SEPERATLY
+
+# Plugin automatic installation
+
+This is expection you to have eform-angular-frontend installed as default in /var/www/microting/
+
+```
+cd /var/www/microting/
+curl -s -L https://raw.githubusercontent.com/microting/eform-service-outer-inner-resource-plugin/stable/install.sh | sudo bash
+```
 
 ## Contributing
 
@@ -21,9 +30,9 @@ Pull-reuqsts that do not pass tests, will not be accepted.
 
 ### Where to contribute
 
-Check out the [full issues list](https://github.com/microting/eform-service-machinearea-plugin/issues) for a list of all potential areas for contributions.
+Check out the [full issues list](https://github.com/microting/eform-service-outer-inner-resource-plugin/issues) for a list of all potential areas for contributions.
 
-To improve the chances to get a pull request merged you should select an issue that is labelled with the [help_wanted](https://github.com/microting/eform-service-machinearea-plugin/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp_wanted) or [bug](https://github.com/microting/eform-service-machinearea-plugin/issues?q=is%3Aissue+is%3Aopen+label%3Abug) labels. If the issue you want to work on is not labelled with `help-wanted` or `bug`, you can start a conversation with the issue owner asking whether an external contribution will be considered.
+To improve the chances to get a pull request merged you should select an issue that is labelled with the [help_wanted](https://github.com/microting/eform-service-outer-inner-resource-plugin/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp_wanted) or [bug](https://github.com/microting/eform-service-outer-inner-resource-plugin/issues?q=is%3Aissue+is%3Aopen+label%3Abug) labels. If the issue you want to work on is not labelled with `help-wanted` or `bug`, you can start a conversation with the issue owner asking whether an external contribution will be considered.
 	
 ### Suggestions
 
