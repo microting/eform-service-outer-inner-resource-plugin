@@ -27,8 +27,8 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Microsoft.EntityFrameworkCore;
 using Microting.eForm.Dto;
-using Microting.eFormMachineAreaBase.Infrastructure.Data;
-using Microting.eFormMachineAreaBase.Infrastructure.Data.Factories;
+using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
+using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Factories;
 using Microting.WindowsService.BasePn;
 using Rebus.Bus;
 using ServiceOuterInnerResourcePlugin.Installers;
@@ -50,7 +50,7 @@ namespace ServiceOuterInnerResourcePlugin
         private string _serviceLocation;
         private int _maxParallelism = 1;
         private int _numberOfWorkers = 1;
-        private MachineAreaPnDbContext _dbContext;
+        private OuterInnerResourcePnDbContext _dbContext;
         #endregion
         
         public void CoreEventException(object sender, EventArgs args)
@@ -80,7 +80,7 @@ namespace ServiceOuterInnerResourcePlugin
 
         public void CaseCompleted(object sender, EventArgs args)
         {
-            Case_Dto trigger = (Case_Dto)sender;
+            CaseDto trigger = (CaseDto)sender;
 
             int? caseId = trigger.MicrotingUId;
             int? checkId = trigger.CheckUId;
@@ -132,7 +132,7 @@ namespace ServiceOuterInnerResourcePlugin
                     if (string.IsNullOrEmpty(connectionString))
                         throw new ArgumentException("serverConnectionString is not allowed to be null or empty");
 
-                    MachineAreaPnContextFactory contextFactory = new MachineAreaPnContextFactory();
+                    OuterInnerResourcePnContextFactory contextFactory = new OuterInnerResourcePnContextFactory();
 
                     _dbContext = contextFactory.CreateDbContext(new[] { connectionString });
                     _dbContext.Database.Migrate();
@@ -151,7 +151,7 @@ namespace ServiceOuterInnerResourcePlugin
                     _numberOfWorkers = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
 
                     _container = new WindsorContainer();
-                    _container.Register(Component.For<MachineAreaPnDbContext>().Instance(_dbContext));
+                    _container.Register(Component.For<OuterInnerResourcePnDbContext>().Instance(_dbContext));
                     _container.Register(Component.For<eFormCore.Core>().Instance(_sdkCore));
                     _container.Install(
                         new RebusHandlerInstaller()

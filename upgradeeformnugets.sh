@@ -3,10 +3,10 @@
 GIT_STATUS=`git status | grep "nothing to commit, working tree clean" | wc -l`
 if (( "$GIT_STATUS" > 0 )); then
 	git pull
-	cd ServiceMachineAreaPlugin
+	cd ServiceOuterInnerResourcePlugin
 
-	dotnet add ServiceMachineAreaPlugin.csproj package Microting.eForm
-	dotnet add ServiceMachineAreaPlugin.csproj package Microting.eFormOuterInnerResourceBase
+	dotnet add ServiceOuterInnerResourcePlugin.csproj package Microting.eForm
+	dotnet add ServiceOuterInnerResourcePlugin.csproj package Microting.eFormOuterInnerResourceBase
 
 	EFORM_VERSION=`dotnet list package | grep 'Microting.eForm ' | cut -c64-71`
 	EFORM_PLUGINBASE_VERSION=`dotnet list package | grep 'Microting.eFormOuterInnerResourceBase' | cut -c64-71`

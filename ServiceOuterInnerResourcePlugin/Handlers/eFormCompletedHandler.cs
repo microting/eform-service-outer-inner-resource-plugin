@@ -24,8 +24,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
-using Microting.eFormMachineAreaBase.Infrastructure.Data;
-using Microting.eFormMachineAreaBase.Infrastructure.Data.Entities;
+using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
+using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Entities;
 using Rebus.Handlers;
 using ServiceOuterInnerResourcePlugin.Messages;
 
@@ -34,9 +34,9 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
     public class eFormCompletedHandler : IHandleMessages<eFormCompleted>
     {
         private readonly eFormCore.Core _sdkCore;
-        private readonly MachineAreaPnDbContext _dbContext;
+        private readonly OuterInnerResourcePnDbContext _dbContext;
 
-        public eFormCompletedHandler(eFormCore.Core sdkCore, MachineAreaPnDbContext dbContext)
+        public eFormCompletedHandler(eFormCore.Core sdkCore, OuterInnerResourcePnDbContext dbContext)
         {
             _dbContext = dbContext;
             _sdkCore = sdkCore;
@@ -47,26 +47,26 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
             #region get case information
 
             WriteLogEntry($"eFormCompletedHandler.Handle: we got called for message.caseId {message.caseId} and message.checkId {message.checkId}");
-            Case_Dto caseDto = _sdkCore.CaseLookup(message.caseId, message.checkId);
-            ReplyElement replyElement = _sdkCore.CaseRead(message.caseId, message.checkId);
+            CaseDto caseDto = await _sdkCore.CaseLookup(message.caseId, message.checkId);
+            ReplyElement replyElement = await _sdkCore.CaseRead(message.caseId, message.checkId);
 
-            MachineAreaSite machineAreaSite =
-                _dbContext.MachineAreaSites.SingleOrDefault(x =>
+            OuterInnerResourceSite machineAreaSite =
+                _dbContext.OuterInnerResourceSites.SingleOrDefault(x =>
                     x.MicrotingSdkCaseId == message.caseId);
             
-            MachineAreaTimeRegistration machineAreaTimeRegistration = 
-                await _dbContext.MachineAreaTimeRegistrations.SingleOrDefaultAsync(x =>
+            ResourceTimeRegistration machineAreaTimeRegistration = 
+                await _dbContext.ResourceTimeRegistrations.SingleOrDefaultAsync(x =>
                 x.DoneAt == replyElement.DoneAt && 
                 x.SDKCaseId == (int) caseDto.CaseId &&
                 x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId);
 
             if (machineAreaTimeRegistration == null)
             {
-                machineAreaTimeRegistration = new MachineAreaTimeRegistration();
+                machineAreaTimeRegistration = new ResourceTimeRegistration();
                 if (machineAreaSite != null)
                 {
-                    machineAreaTimeRegistration.AreaId = machineAreaSite.MachineArea.AreaId;
-                    machineAreaTimeRegistration.MachineId = machineAreaSite.MachineArea.MachineId;
+                    machineAreaTimeRegistration.OuterResourceId = machineAreaSite.OuterInnerResource.OuterResourceId;
+                    machineAreaTimeRegistration.InnerResourceId = machineAreaSite.OuterInnerResource.InnerResourceId;
                     machineAreaTimeRegistration.DoneAt = replyElement.DoneAt;
                     if (caseDto.CaseId != null) machineAreaTimeRegistration.SDKCaseId = (int) caseDto.CaseId;
                     machineAreaTimeRegistration.SDKSiteId = machineAreaSite.MicrotingSdkSiteId;
