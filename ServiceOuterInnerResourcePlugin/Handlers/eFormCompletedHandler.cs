@@ -27,6 +27,7 @@ using Microting.eForm.Infrastructure.Models;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Entities;
 using Rebus.Handlers;
+using ServiceOuterInnerResourcePlugin.Infrastucture.Helpers;
 using ServiceOuterInnerResourcePlugin.Messages;
 
 namespace ServiceOuterInnerResourcePlugin.Handlers
@@ -36,9 +37,9 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
         private readonly eFormCore.Core _sdkCore;
         private readonly OuterInnerResourcePnDbContext _dbContext;
 
-        public eFormCompletedHandler(eFormCore.Core sdkCore, OuterInnerResourcePnDbContext dbContext)
+        public eFormCompletedHandler(eFormCore.Core sdkCore, DbContextHelper dbContextHelper)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContextHelper.GetDbContext();
             _sdkCore = sdkCore;
         }
 
@@ -47,8 +48,8 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
             #region get case information
 
             WriteLogEntry($"eFormCompletedHandler.Handle: we got called for message.caseId {message.caseId} and message.checkId {message.checkId}");
-            CaseDto caseDto = await _sdkCore.CaseLookup(message.caseId, message.checkId);
-            ReplyElement replyElement = await _sdkCore.CaseRead(message.caseId, message.checkId);
+            CaseDto caseDto = await _sdkCore.CaseLookup(message.caseId, message.checkId).ConfigureAwait(false);
+            ReplyElement replyElement = await _sdkCore.CaseRead(message.caseId, message.checkId).ConfigureAwait(false);
 
             OuterInnerResourceSite machineAreaSite =
                 _dbContext.OuterInnerResourceSites.SingleOrDefault(x =>
@@ -58,7 +59,7 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                 await _dbContext.ResourceTimeRegistrations.SingleOrDefaultAsync(x =>
                 x.DoneAt == replyElement.DoneAt && 
                 x.SDKCaseId == (int) caseDto.CaseId &&
-                x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId);
+                x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId).ConfigureAwait(false);
 
             if (machineAreaTimeRegistration == null)
             {
@@ -93,7 +94,7 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                 }
                 #endregion
 
-                await machineAreaTimeRegistration.Create(_dbContext);
+                await machineAreaTimeRegistration.Create(_dbContext).ConfigureAwait(false);
             }
         }
 

@@ -31,6 +31,7 @@ using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Factories;
 using Microting.WindowsService.BasePn;
 using Rebus.Bus;
+using ServiceOuterInnerResourcePlugin.Infrastucture.Helpers;
 using ServiceOuterInnerResourcePlugin.Installers;
 using ServiceOuterInnerResourcePlugin.Messages;
 
@@ -51,6 +52,7 @@ namespace ServiceOuterInnerResourcePlugin
         private int _maxParallelism = 1;
         private int _numberOfWorkers = 1;
         private OuterInnerResourcePnDbContext _dbContext;
+        private DbContextHelper _dbContextHelper;
         #endregion
         
         public void CoreEventException(object sender, EventArgs args)
@@ -132,9 +134,12 @@ namespace ServiceOuterInnerResourcePlugin
                     if (string.IsNullOrEmpty(connectionString))
                         throw new ArgumentException("serverConnectionString is not allowed to be null or empty");
 
-                    OuterInnerResourcePnContextFactory contextFactory = new OuterInnerResourcePnContextFactory();
+                    //OuterInnerResourcePnContextFactory contextFactory = new OuterInnerResourcePnContextFactory();
+                    _dbContextHelper = new DbContextHelper(connectionString);
 
-                    _dbContext = contextFactory.CreateDbContext(new[] { connectionString });
+                    _dbContext = _dbContextHelper.GetDbContext();//.CreateDbContext(new[] { connectionString });
+
+                    //_dbContextHelper = new DbContextHelper(connectionString);
                     _dbContext.Database.Migrate();
 
                     _coreAvailable = true;
@@ -151,8 +156,9 @@ namespace ServiceOuterInnerResourcePlugin
                     _numberOfWorkers = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
 
                     _container = new WindsorContainer();
-                    _container.Register(Component.For<OuterInnerResourcePnDbContext>().Instance(_dbContext));
+                    //_container.Register(Component.For<OuterInnerResourcePnDbContext>().Instance(_dbContext));
                     _container.Register(Component.For<eFormCore.Core>().Instance(_sdkCore));
+                    _container.Register(Component.For<DbContextHelper>().Instance(_dbContextHelper));
                     _container.Install(
                         new RebusHandlerInstaller()
                         , new RebusInstaller(connectionString, _maxParallelism, _numberOfWorkers)

@@ -5,6 +5,7 @@ using Microting.eForm.Dto;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Rebus.Bus;
 using Rebus.Handlers;
+using ServiceOuterInnerResourcePlugin.Infrastucture.Helpers;
 using ServiceOuterInnerResourcePlugin.Messages;
 
 namespace ServiceOuterInnerResourcePlugin.Handlers
@@ -15,9 +16,9 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
         private readonly OuterInnerResourcePnDbContext _dbContext;
         private readonly IBus _bus;
 
-        public CheckAllCasesHandler(eFormCore.Core sdkCore, OuterInnerResourcePnDbContext dbContext, IBus bus)
+        public CheckAllCasesHandler(eFormCore.Core sdkCore, DbContextHelper dbContextHelper, IBus bus)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContextHelper.GetDbContext();
             _sdkCore = sdkCore;
             _bus = bus;
         }
@@ -25,7 +26,7 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
         public async Task Handle(CheckAllCases message)
         {
             Console.WriteLine("[DBG] CheckAllCasesHandler.Handle: called");
-            List<Case> list = await _sdkCore.CaseReadAll(message.eFormId, null, null);
+            List<Case> list = await _sdkCore.CaseReadAll(message.eFormId, null, null).ConfigureAwait(false);
             Console.WriteLine($"[DBG] CheckAllCasesHandler.Handle: CaseReadAll returned number of cases: {list.Count}");
 
             foreach (Case @case in list)
@@ -33,7 +34,7 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                 WriteLogEntry($"CheckAllCasesHandler.Handle: Dispatching eFormCompleted for @case.MicrotingUId {@case.MicrotingUId} @case.CheckUIid {@case.CheckUIid}");
                 if (@case.MicrotingUId != null && @case.CheckUIid != null)
                 {
-                    await _bus.SendLocal(new eFormCompleted((int) @case.MicrotingUId, (int) @case.CheckUIid));
+                    await _bus.SendLocal(new eFormCompleted((int) @case.MicrotingUId, (int) @case.CheckUIid)).ConfigureAwait(false);
                 }
             }
         }
