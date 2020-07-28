@@ -26,7 +26,20 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
         public async Task Handle(CheckAllCases message)
         {
             Console.WriteLine("[DBG] CheckAllCasesHandler.Handle: called");
-            List<Case> list = await _sdkCore.CaseReadAll(message.eFormId, null, null).ConfigureAwait(false);
+
+            var timeZone = "Europe/Copenhagen";
+
+            TimeZoneInfo timeZoneInfo;
+
+            try
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            }
+            catch
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time");
+            }
+            List<Case> list = await _sdkCore.CaseReadAll(message.eFormId, null, null, timeZoneInfo).ConfigureAwait(false);
             Console.WriteLine($"[DBG] CheckAllCasesHandler.Handle: CaseReadAll returned number of cases: {list.Count}");
 
             foreach (Case @case in list)
