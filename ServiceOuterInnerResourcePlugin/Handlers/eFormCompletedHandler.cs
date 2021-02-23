@@ -23,12 +23,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microting.eForm.Dto;
+using Microting.eForm.Infrastructure;
+using Microting.eForm.Infrastructure.Data.Entities;
 using Microting.eForm.Infrastructure.Models;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Entities;
 using Rebus.Handlers;
 using ServiceOuterInnerResourcePlugin.Infrastucture.Helpers;
 using ServiceOuterInnerResourcePlugin.Messages;
+using CheckListValue = Microting.eForm.Infrastructure.Models.CheckListValue;
+using Field = Microting.eForm.Infrastructure.Models.Field;
+using FieldValue = Microting.eForm.Infrastructure.Models.FieldValue;
 
 namespace ServiceOuterInnerResourcePlugin.Handlers
 {
@@ -48,16 +53,18 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
             #region get case information
 
             WriteLogEntry($"eFormCompletedHandler.Handle: we got called for message.caseId {message.caseId} and message.checkId {message.checkId}");
+            await using MicrotingDbContext microtingDbContext = _sdkCore.DbContextHelper.GetDbContext();
+            Language language = await microtingDbContext.Languages.SingleAsync(x => x.LanguageCode == "da");
             CaseDto caseDto = await _sdkCore.CaseLookup(message.caseId, message.checkId).ConfigureAwait(false);
-            ReplyElement replyElement = await _sdkCore.CaseRead(message.caseId, message.checkId).ConfigureAwait(false);
+            ReplyElement replyElement = await _sdkCore.CaseRead(message.caseId, message.checkId, language).ConfigureAwait(false);
 
             OuterInnerResourceSite machineAreaSite =
                 _dbContext.OuterInnerResourceSites.SingleOrDefault(x =>
                     x.MicrotingSdkCaseId == message.caseId);
-            
-            ResourceTimeRegistration machineAreaTimeRegistration = 
+
+            ResourceTimeRegistration machineAreaTimeRegistration =
                 await _dbContext.ResourceTimeRegistrations.SingleOrDefaultAsync(x =>
-                x.DoneAt == replyElement.DoneAt && 
+                x.DoneAt == replyElement.DoneAt &&
                 x.SDKCaseId == (int) caseDto.CaseId &&
                 x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId).ConfigureAwait(false);
 
@@ -85,7 +92,7 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                         Console.WriteLine($"Current field_value is {fieldValue}");
                         int registeredTime = int.Parse(fieldValue.Split("|")[3]);
                         Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
-                    
+
                         machineAreaTimeRegistration.SDKFieldValueId = fv.Id;
                         machineAreaTimeRegistration.TimeInSeconds = (registeredTime / 1000);
                         machineAreaTimeRegistration.TimeInMinutes = ((registeredTime / 1000) / 60);
