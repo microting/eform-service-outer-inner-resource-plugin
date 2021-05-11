@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.85](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.85) (2021-05-11)
+
+[Full Changelog](https://github.com/microting/eform-service-outer-inner-resource-plugin/compare/v1.0.84...v1.0.85)
+
 ## [v1.0.84](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.84) (2021-05-07)
 
 [Full Changelog](https://github.com/microting/eform-service-outer-inner-resource-plugin/compare/v1.0.83...v1.0.84)
