@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.0.91](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.91) (2021-06-03)
+
+[Full Changelog](https://github.com/microting/eform-service-outer-inner-resource-plugin/compare/v1.0.90...v1.0.91)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormOuterInnerResourceBase from 3.0.14 to 3.0.15 [\#157](https://github.com/microting/eform-service-outer-inner-resource-plugin/issues/157)
+- Bump Microting.eFormApi.BasePn from 3.0.16 to 3.0.17 [\#156](https://github.com/microting/eform-service-outer-inner-resource-plugin/issues/156)
+- Bump Microting.eForm from 5.2.7 to 5.2.8 [\#155](https://github.com/microting/eform-service-outer-inner-resource-plugin/issues/155)
+
 ## [v1.0.90](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.90) (2021-06-01)
 
 [Full Changelog](https://github.com/microting/eform-service-outer-inner-resource-plugin/compare/v1.0.89...v1.0.90)
