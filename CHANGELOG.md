@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.110](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.110) (2021-09-14)
+
+[Full Changelog](https://github.com/microting/eform-service-outer-inner-resource-plugin/compare/v1.0.109...v1.0.110)
+
 ## [v1.0.109](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.109) (2021-09-14)
 
 [Full Changelog](https://github.com/microting/eform-service-outer-inner-resource-plugin/compare/v1.0.108...v1.0.109)
@@ -274,6 +278,7 @@
 **Merged pull requests:**
 
 - Bump NUnit from 3.13.0 to 3.13.1 [\#29](https://github.com/microting/eform-service-outer-inner-resource-plugin/pull/29) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microsoft.NET.Test.Sdk from 16.4.0 to 16.8.3 [\#7](https://github.com/microting/eform-service-outer-inner-resource-plugin/pull/7) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v1.0.79](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.79) (2021-02-23)
 
@@ -295,7 +300,6 @@
 **Merged pull requests:**
 
 - Bump NUnit from 3.12.0 to 3.13.0 [\#10](https://github.com/microting/eform-service-outer-inner-resource-plugin/pull/10) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump Microsoft.NET.Test.Sdk from 16.4.0 to 16.8.3 [\#7](https://github.com/microting/eform-service-outer-inner-resource-plugin/pull/7) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v1.0.76](https://github.com/microting/eform-service-outer-inner-resource-plugin/tree/v1.0.76) (2021-01-19)
 
