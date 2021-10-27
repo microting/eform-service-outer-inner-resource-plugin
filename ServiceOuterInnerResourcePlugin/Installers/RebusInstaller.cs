@@ -23,6 +23,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Rebus.Config;
+using Rebus.Logging;
 
 namespace ServiceOuterInnerResourcePlugin.Installers
 {
@@ -43,7 +44,7 @@ namespace ServiceOuterInnerResourcePlugin.Installers
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             Configure.With(new CastleWindsorContainerAdapter(container))
-                .Logging(l => l.ColoredConsole())
+                .Logging(l => l.ColoredConsole(LogLevel.Info))
                 .Transport(t => t.UseRabbitMq("amqp://admin:password@localhost", "eform-service-outer-inner-resource-plugin"))
                 .Options(o =>
                 {

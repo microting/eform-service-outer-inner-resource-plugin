@@ -73,8 +73,11 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                 machineAreaTimeRegistration = new ResourceTimeRegistration();
                 if (machineAreaSite != null)
                 {
-                    machineAreaTimeRegistration.OuterResourceId = machineAreaSite.OuterInnerResource.OuterResourceId;
-                    machineAreaTimeRegistration.InnerResourceId = machineAreaSite.OuterInnerResource.InnerResourceId;
+                    var outerInnerResource =
+                        await _dbContext.OuterInnerResources.SingleOrDefaultAsync(x =>
+                            x.Id == machineAreaSite.OuterInnerResourceId);
+                    machineAreaTimeRegistration.OuterResourceId = outerInnerResource.OuterResourceId;
+                    machineAreaTimeRegistration.InnerResourceId = outerInnerResource.InnerResourceId;
                     machineAreaTimeRegistration.DoneAt = replyElement.DoneAt;
                     if (caseDto.CaseId != null) machineAreaTimeRegistration.SDKCaseId = (int) caseDto.CaseId;
                     machineAreaTimeRegistration.SDKSiteId = machineAreaSite.MicrotingSdkSiteId;
@@ -86,17 +89,28 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                     Field f = (Field) field;
                     if (f.Label.ToLower().Contains("start/stop tid"))
                     {
-                        Console.WriteLine($"The field is {f.Label}");
-                        FieldValue fv = f.FieldValues[0];
-                        String fieldValue = fv.Value;
-                        Console.WriteLine($"Current field_value is {fieldValue}");
-                        int registeredTime = int.Parse(fieldValue.Split("|")[3]);
-                        Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
+                        try
+                        {
 
-                        machineAreaTimeRegistration.SDKFieldValueId = fv.Id;
-                        machineAreaTimeRegistration.TimeInSeconds = (registeredTime / 1000);
-                        machineAreaTimeRegistration.TimeInMinutes = ((registeredTime / 1000) / 60);
-                        machineAreaTimeRegistration.TimeInHours = ((registeredTime / 1000) / 3600);
+                            Console.WriteLine($"The field is {f.Label}");
+                            FieldValue fv = f.FieldValues[0];
+                            String fieldValue = fv.Value;
+                            if (!string.IsNullOrEmpty(fieldValue))
+                            {
+                                Console.WriteLine($"Current field_value is {fieldValue}");
+                                int registeredTime = int.Parse(fieldValue.Split("|")[3]);
+                                Console.WriteLine($"We are setting the registered time to {registeredTime.ToString()}");
+
+                                machineAreaTimeRegistration.SDKFieldValueId = fv.Id;
+                                machineAreaTimeRegistration.TimeInSeconds = (registeredTime / 1000);
+                                machineAreaTimeRegistration.TimeInMinutes = ((registeredTime / 1000) / 60);
+                                machineAreaTimeRegistration.TimeInHours = ((registeredTime / 1000) / 3600);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
                 #endregion
