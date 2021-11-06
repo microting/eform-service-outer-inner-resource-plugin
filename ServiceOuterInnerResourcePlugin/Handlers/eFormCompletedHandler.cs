@@ -50,8 +50,6 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
 
         public async Task Handle(eFormCompleted message)
         {
-            #region get case information
-
             WriteLogEntry($"eFormCompletedHandler.Handle: we got called for message.caseId {message.caseId} and message.checkId {message.checkId}");
             await using MicrotingDbContext microtingDbContext = _sdkCore.DbContextHelper.GetDbContext();
             Language language = await microtingDbContext.Languages.SingleAsync(x => x.LanguageCode == "da");
@@ -62,15 +60,15 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                 _dbContext.OuterInnerResourceSites.SingleOrDefault(x =>
                     x.MicrotingSdkCaseId == message.caseId);
 
-            ResourceTimeRegistration machineAreaTimeRegistration =
-                await _dbContext.ResourceTimeRegistrations.SingleOrDefaultAsync(x =>
+            var machineAreaTimeRegistrations =
+                await _dbContext.ResourceTimeRegistrations.Where(x =>
                 x.DoneAt == replyElement.DoneAt &&
                 x.SDKCaseId == (int) caseDto.CaseId &&
-                x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId).ConfigureAwait(false);
+                x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId).ToListAsync().ConfigureAwait(false);
 
-            if (machineAreaTimeRegistration == null)
+            if (machineAreaTimeRegistrations.Count == 0)
             {
-                machineAreaTimeRegistration = new ResourceTimeRegistration();
+                ResourceTimeRegistration machineAreaTimeRegistration = new ResourceTimeRegistration();
                 if (machineAreaSite != null)
                 {
                     var outerInnerResource =
@@ -113,9 +111,29 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                         }
                     }
                 }
-                #endregion
 
                 await machineAreaTimeRegistration.Create(_dbContext).ConfigureAwait(false);
+            }
+            else
+            {
+                if (machineAreaTimeRegistrations.Count > 1)
+                {
+                    int i = 0;
+                    foreach (ResourceTimeRegistration machineAreaTimeRegistration in machineAreaTimeRegistrations)
+                    {
+                        if (i > 0)
+                        {
+                            await machineAreaTimeRegistration.Delete(_dbContext);
+                        }
+
+                        i++;
+                        Console.WriteLine("More than one time registration found");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("One time registration found");
+                }
             }
         }
 
