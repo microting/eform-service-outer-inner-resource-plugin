@@ -54,7 +54,7 @@ namespace ServiceOuterInnerResourcePlugin
         private OuterInnerResourcePnDbContext _dbContext;
         private DbContextHelper _dbContextHelper;
         #endregion
-        
+
         public void CoreEventException(object sender, EventArgs args)
         {
             // Do nothing
@@ -117,17 +117,16 @@ namespace ServiceOuterInnerResourcePlugin
                     dbNameSection = Regex.Match(sdkConnectionString, @"(Initial Catalog=\w*;)").Groups[0].Value;
                     dbPrefix = Regex.Match(sdkConnectionString, @"Initial Catalog=(\d*)_").Groups[1].Value;
                 }
-                
-                
+
                 string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-outer-inner-resource-plugin;";
                 string connectionString = sdkConnectionString.Replace(dbNameSection, pluginDbName);
-
+                string rabbitmqHost = connectionString.Contains("frontend") ? $"frontend-{dbPrefix}-rabbitmq" :"localhost";
 
                 if (!_coreAvailable && !_coreStatChanging)
                 {
                     _serviceLocation = serviceLocation;
                     _coreStatChanging = true;
-                    
+
                     if (string.IsNullOrEmpty(_serviceLocation))
                         throw new ArgumentException("serviceLocation is not allowed to be null or empty");
 
@@ -146,7 +145,7 @@ namespace ServiceOuterInnerResourcePlugin
                     _coreStatChanging = false;
 
                     startSdkCoreSqlOnly(sdkConnectionString);
-                    
+
                     string temp = _dbContext.PluginConfigurationValues
                         .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:MaxParallelism")?.Value;
                     _maxParallelism = string.IsNullOrEmpty(temp) ? 1 : int.Parse(temp);
@@ -161,21 +160,21 @@ namespace ServiceOuterInnerResourcePlugin
                     _container.Register(Component.For<DbContextHelper>().Instance(_dbContextHelper));
                     _container.Install(
                         new RebusHandlerInstaller()
-                        , new RebusInstaller(connectionString, _maxParallelism, _numberOfWorkers)
+                        , new RebusInstaller(connectionString, _maxParallelism, _numberOfWorkers, "admin", "password", rabbitmqHost)
                     );
 
                     _bus = _container.Resolve<IBus>();
-                    
+
                     temp = _dbContext.PluginConfigurationValues
                         .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:ShouldCheckAllCases")?.Value;
-                    
+
                     Console.WriteLine("[DBG] ServiceOuterInnerResourcePlugin.Start: ShouldCheckAllCases set to: " + temp);
 
                     if (temp.ToLower() == "true")
                     {
                         temp = _dbContext.PluginConfigurationValues
                             .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:SdkeFormId")?.Value;
-                        
+
                         Console.WriteLine("[DBG] ServiceOuterInnerResourcePlugin.Start: SdkeFormId set to: " + temp);
                         _bus.SendLocal(new CheckAllCases(int.Parse(temp)));
                     }
@@ -229,7 +228,7 @@ namespace ServiceOuterInnerResourcePlugin
         {
             return true;
         }
-        
+
         public void startSdkCoreSqlOnly(string sdkConnectionString)
         {
             _sdkCore = new eFormCore.Core();
