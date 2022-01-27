@@ -62,7 +62,7 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
 
             var machineAreaTimeRegistrations =
                 await _dbContext.ResourceTimeRegistrations.Where(x =>
-                x.DoneAt == replyElement.DoneAt &&
+                // x.DoneAt == replyElement.DoneAt &&
                 x.SDKCaseId == (int) caseDto.CaseId &&
                 x.SDKSiteId == machineAreaSite.MicrotingSdkSiteId).ToListAsync().ConfigureAwait(false);
 

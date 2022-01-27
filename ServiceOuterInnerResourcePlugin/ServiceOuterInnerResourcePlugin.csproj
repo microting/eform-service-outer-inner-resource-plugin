@@ -14,12 +14,12 @@
       <OutputPath>../../MicrotingService/bin/Debug/Plugins/ServiceOuterInnerResourcePlugin</OutputPath>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="5.0.0" />
-      <PackageReference Include="Microting.eForm" Version="5.2.57" />
-      <PackageReference Include="Microting.eFormApi.BasePn" Version="3.0.64" />
-      <PackageReference Include="Microting.eFormOuterInnerResourceBase" Version="3.0.56" />
+      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
+      <PackageReference Include="Microting.eForm" Version="5.4.2" />
+      <PackageReference Include="Microting.eFormApi.BasePn" Version="3.1.19" />
+      <PackageReference Include="Microting.eFormOuterInnerResourceBase" Version="3.0.75" />
       <PackageReference Include="Microting.WindowsService.BasePn" Version="2.0.0" />
-      <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
+      <PackageReference Include="System.ComponentModel.Composition" Version="6.0.0" />
     </ItemGroup>
 
 </Project>
