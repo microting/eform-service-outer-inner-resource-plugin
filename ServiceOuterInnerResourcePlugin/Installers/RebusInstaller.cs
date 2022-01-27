@@ -36,7 +36,7 @@ namespace ServiceOuterInnerResourcePlugin.Installers
         private readonly string _rabbitMqPassword;
         private readonly string _rabbitMqHost;
 
-        public RebusInstaller(string connectionString, int maxParallelism, int numberOfWorkers, string rabbitMqUser, string rabbitMqHost, string rabbitMqPassword)
+        public RebusInstaller(string connectionString, int maxParallelism, int numberOfWorkers, string rabbitMqUser, string rabbitMqPassword, string rabbitMqHost)
         {
             if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
             _connectionString = connectionString;
