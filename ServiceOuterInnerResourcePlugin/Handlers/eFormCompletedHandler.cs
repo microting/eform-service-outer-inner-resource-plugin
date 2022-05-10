@@ -113,6 +113,10 @@ namespace ServiceOuterInnerResourcePlugin.Handlers
                 }
 
                 await machineAreaTimeRegistration.Create(_dbContext).ConfigureAwait(false);
+                if (machineAreaTimeRegistration.SDKFieldValueId == 0)
+                {
+                    await machineAreaTimeRegistration.Delete(_dbContext).ConfigureAwait(false);
+                }
             }
             else
             {
