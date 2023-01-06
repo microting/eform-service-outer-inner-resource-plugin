@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <RootNamespace>ServiceMachineAreaPlugin.Integration.Test</RootNamespace>
+        <IsPublishable>false</IsPublishable>
     </PropertyGroup>
 
     <ItemGroup>
