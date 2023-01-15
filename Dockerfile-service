@@ -1,0 +1,24 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+ARG GITVERSION
+WORKDIR /app
+ARG GITVERSION
+ARG PLUGIN3VERSION
+
+# Copy csproj and restore as distinct layers
+COPY eform-debian-service ./eform-debian-service
+COPY eform-service-outer-inner-resource-plugin ./eform-service-outer-inner-resource-plugin
+RUN dotnet publish -o out /p:Version=$GITVERSION --runtime linux-x64 --configuration Release eform-debian-service
+RUN dotnet publish -o out/Plugins/ServiceOuterInnerResourcePlugin /p:Version=$PLUGIN3VERSION --runtime linux-x64 --configuration Release eform-service-outer-inner-resource-plugin
+RUN pwd
+RUN ls -lah out
+RUN ls -lah out/Plugins
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /app
+COPY --from=build-env /app/out .
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV Logging__Console__FormatterName=
+
+ENTRYPOINT ["dotnet", "MicrotingService.dll"]

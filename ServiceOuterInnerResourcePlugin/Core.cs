@@ -111,7 +111,6 @@ namespace ServiceOuterInnerResourcePlugin
 
                 string pluginDbName = $"Database={dbPrefix}_eform-angular-outer-inner-resource-plugin;";
                 string connectionString = sdkConnectionString.Replace(dbNameSection, pluginDbName);
-                string rabbitmqHost = connectionString.Contains("frontend") ? $"frontend-{dbPrefix}-rabbitmq" :"localhost";
 
                 if (!_coreAvailable && !_coreStatChanging)
                 {
@@ -136,6 +135,14 @@ namespace ServiceOuterInnerResourcePlugin
                     _coreStatChanging = false;
 
                     startSdkCoreSqlOnly(sdkConnectionString);
+                    Console.WriteLine($"Connection string: {sdkConnectionString}");
+
+                    var rabbitmqHost = _sdkCore.GetSdkSetting(Settings.rabbitMqHost).GetAwaiter().GetResult();
+                    Console.WriteLine($"rabbitmqHost: {rabbitmqHost}");
+                    var rabbitMqUser = _sdkCore.GetSdkSetting(Settings.rabbitMqUser).GetAwaiter().GetResult();
+                    Console.WriteLine($"rabbitMqUser: {rabbitMqUser}");
+                    var rabbitMqPassword = _sdkCore.GetSdkSetting(Settings.rabbitMqPassword).GetAwaiter().GetResult();
+                    Console.WriteLine($"rabbitMqPassword: {rabbitMqPassword}");
 
                     string temp = _dbContext.PluginConfigurationValues
                         .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:MaxParallelism")?.Value;
@@ -151,7 +158,7 @@ namespace ServiceOuterInnerResourcePlugin
                     _container.Register(Component.For<DbContextHelper>().Instance(_dbContextHelper));
                     _container.Install(
                         new RebusHandlerInstaller()
-                        , new RebusInstaller(connectionString, _maxParallelism, _numberOfWorkers, "admin", "password", rabbitmqHost)
+                        , new RebusInstaller(dbPrefix, connectionString, _maxParallelism, _numberOfWorkers, rabbitMqUser, rabbitMqPassword, rabbitmqHost)
                     );
 
                     _bus = _container.Resolve<IBus>();
@@ -161,7 +168,7 @@ namespace ServiceOuterInnerResourcePlugin
 
                     Console.WriteLine("[DBG] ServiceOuterInnerResourcePlugin.Start: ShouldCheckAllCases set to: " + temp);
 
-                    if (temp.ToLower() == "true")
+                    if (temp?.ToLower() == "true")
                     {
                         temp = _dbContext.PluginConfigurationValues
                             .SingleOrDefault(x => x.Name == "OuterInnerResourceSettings:SdkeFormId")?.Value;
@@ -224,7 +231,7 @@ namespace ServiceOuterInnerResourcePlugin
         {
             _sdkCore = new eFormCore.Core();
 
-            _sdkCore.StartSqlOnly(sdkConnectionString);
+            _sdkCore.StartSqlOnly(sdkConnectionString).GetAwaiter().GetResult();
         }
     }
 }

@@ -16,39 +16,68 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: getong/mariadb-action@v1.1
+    - uses: actions/checkout@v3
       with:
-        host port: 3306 # Optional, default value is 3306. The port of host
-        container port: 3306 # Optional, default value is 3306. The port of container
-        character set server: 'utf8' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
-        collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
-        mariadb version: 'latest' # Optional, default value is "latest". The version of the MariaDB
-        mysql database: 'some_test' # Optional, default value is "test". The specified database which will be create
-        mysql root password: 'secretpassword' # Required if "mysql user" is empty, default is empty. The root superuser password
-        mysql user: 'developer' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-        mysql password: 'passwordtoo' # Required if "mysql user" exists. The password for the "mysql user"
-    - name: Sleep 15 seconds
-      run: sleep 15
-    - uses: getong/rabbitmq-action@v1.2
+        path: eform-service-outer-inner-resource-plugin
+    - name: Create docker network 🖧
+      run: docker network create --driver bridge data
+    - name: Start MariaDB
+      run: |
+        docker pull mariadb:10.8
+        docker run --name mariadbtest --network data -e MYSQL_ROOT_PASSWORD=secretpassword -p 3306 -d mariadb:10.8
+    - name: Start rabbitmq
+      run: |
+        docker pull rabbitmq:latest
+        docker run -d --hostname my-rabbit --name some-rabbit --network data -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=password rabbitmq:latest
+    - name: 'Preparing Debian Service checkout'
+      uses: actions/checkout@v3
       with:
-        rabbitmq version: 'latest'
-        host port: 5672
-        rabbitmq user: 'admin'
-        rabbitmq password: 'password'
-        rabbitmq vhost: 'vhost_name'
+        fetch-depth: 0
+        repository: microting/eform-debian-service
+        ref: stable
+        path: eform-debian-service
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    - name: Load DB dump
+      run: |
+        docker exec -i mariadbtest mysql -u root --password=secretpassword -e 'create database `420_SDK`'
+        docker exec -i mariadbtest mysql -u root --password=secretpassword 420_SDK < eform-service-outer-inner-resource-plugin/420_SDK.sql
+        docker exec -i mariadbtest mysql -u root --password=secretpassword -e 'create database `420_eform-angular-outer-inner-resource-plugin`'
+        docker exec -i mariadbtest mysql -u root --password=secretpassword 420_eform-angular-outer-inner-resource-plugin < eform-service-outer-inner-resource-plugin/420_eform-angular-outer-inner-resource-plugin.sql
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore eform-service-outer-inner-resource-plugin
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build eform-service-outer-inner-resource-plugin --configuration Release --no-restore
     - name: Unit Tests
-      run: dotnet test --no-restore -c Release -v n ServiceOuterInnerResourcePlugin.Integration.Test/ServiceOuterInnerResourcePlugin.Integration.Test.csproj
+      run: dotnet test --no-restore -c Release -v n eform-service-outer-inner-resource-plugin/ServiceOuterInnerResourcePlugin.Integration.Test/ServiceOuterInnerResourcePlugin.Integration.Test.csproj
+    - name: Copy Docker file
+      run: cp eform-service-outer-inner-resource-plugin/Dockerfile-service Dockerfile
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build the tagged Docker image
+      run: docker build . -t microtingas/outer-inner-resource-service-container:latest --build-arg GITVERSION=1.0.0 --build-arg PLUGINVERSION=1.0.0 --build-arg PLUGIN3VERSION=1.0.0 --build-arg PLUGIN4VERSION=1.0.0 --build-arg PLUGIN5VERSION=1.0.0
+    - name: Start the newly build Docker container
+      id: docker-run
+      run: docker run --name my-container --network data microtingas/outer-inner-resource-service-container:latest "/ConnectionString=host=mariadbtest;Database=420_SDK;user=root;password=secretpassword;port=3306;Convert Zero Datetime = true;SslMode=none;" > docker_run_log 2>&1 &
+    - name: Sleep 75 seconds for letting the container start and generate some output we can
+      run: sleep 75
+    - name: Get standard output
+      run: cat docker_run_log
+    - name: Stop the newly build Docker container
+      run: docker stop my-container
+    - name: Get standard output
+      run: |
+        cat docker_run_log
+        result=`cat docker_run_log | grep "No messages for us right now!" -m 1 | wc -l`
+        if [ $result -ne 1 ];then exit 1; fi
     - name: The job has failed
       if: ${{ failure() }}
       run: |
         cat dotnet_log
         cat eform-angular-frontend/eform-client/npm_log
+        cat docker_run_log
