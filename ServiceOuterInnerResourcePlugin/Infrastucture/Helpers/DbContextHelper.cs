@@ -1,22 +1,21 @@
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Factories;
 
-namespace ServiceOuterInnerResourcePlugin.Infrastucture.Helpers
+namespace ServiceOuterInnerResourcePlugin.Infrastucture.Helpers;
+
+public class DbContextHelper
 {
-    public class DbContextHelper
+    private string ConnectionString { get;}
+
+    public DbContextHelper(string connectionString)
     {
-        private string ConnectionString { get;}
+        ConnectionString = connectionString;
+    }
 
-        public DbContextHelper(string connectionString)
-        {
-            ConnectionString = connectionString;
-        }
+    public OuterInnerResourcePnDbContext GetDbContext()
+    {
+        OuterInnerResourcePnContextFactory contextFactory = new OuterInnerResourcePnContextFactory();
 
-        public OuterInnerResourcePnDbContext GetDbContext()
-        {
-            OuterInnerResourcePnContextFactory contextFactory = new OuterInnerResourcePnContextFactory();
-
-            return contextFactory.CreateDbContext(new[] { ConnectionString });
-        }
+        return contextFactory.CreateDbContext(new[] { ConnectionString });
     }
 }

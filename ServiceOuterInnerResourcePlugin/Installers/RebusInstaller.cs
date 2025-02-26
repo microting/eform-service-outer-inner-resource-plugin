@@ -1,6 +1,6 @@
 /*
 The MIT License (MIT)
-Copyright (c) 2007 - 2019 Microting A/S
+Copyright (c) 2007 - 2025 Microting A/S
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -25,45 +25,44 @@ using Castle.Windsor;
 using Rebus.Config;
 using Rebus.Logging;
 
-namespace ServiceOuterInnerResourcePlugin.Installers
+namespace ServiceOuterInnerResourcePlugin.Installers;
+
+public class RebusInstaller: IWindsorInstaller
 {
-    public class RebusInstaller: IWindsorInstaller
+    private readonly string _connectionString;
+    private readonly int _maxParallelism;
+    private readonly int _numberOfWorkers;
+    private readonly string _rabbitMqUser;
+    private readonly string _rabbitMqPassword;
+    private readonly string _rabbitMqHost;
+    private readonly string _customerNo;
+
+    public RebusInstaller(string customerNo, string connectionString, int maxParallelism, int numberOfWorkers, string rabbitMqUser, string rabbitMqPassword, string rabbitMqHost)
     {
-        private readonly string _connectionString;
-        private readonly int _maxParallelism;
-        private readonly int _numberOfWorkers;
-        private readonly string _rabbitMqUser;
-        private readonly string _rabbitMqPassword;
-        private readonly string _rabbitMqHost;
-        private readonly string _customerNo;
+        if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+        _connectionString = connectionString;
+        _maxParallelism = maxParallelism;
+        _numberOfWorkers = numberOfWorkers;
+        _rabbitMqUser = rabbitMqUser;
+        _rabbitMqHost = rabbitMqHost;
+        _rabbitMqPassword = rabbitMqPassword;
+        _customerNo = customerNo;
+    }
 
-        public RebusInstaller(string customerNo, string connectionString, int maxParallelism, int numberOfWorkers, string rabbitMqUser, string rabbitMqPassword, string rabbitMqHost)
-        {
-            if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
-            _connectionString = connectionString;
-            _maxParallelism = maxParallelism;
-            _numberOfWorkers = numberOfWorkers;
-            _rabbitMqUser = rabbitMqUser;
-            _rabbitMqHost = rabbitMqHost;
-            _rabbitMqPassword = rabbitMqPassword;
-            _customerNo = customerNo;
-        }
+    public void Install(IWindsorContainer container, IConfigurationStore store)
+    {
+        Console.WriteLine($"rabbitMqUser: {_rabbitMqUser}");
+        Console.WriteLine($"rabbitMqPassword: {_rabbitMqPassword}");
+        Console.WriteLine($"rabbitMqHost: {_rabbitMqHost}");
+        Configure.With(new CastleWindsorContainerAdapter(container))
+            .Logging(l => l.ColoredConsole(LogLevel.Info))
+            .Transport(t => t.UseRabbitMq($"amqp://{_rabbitMqUser}:{_rabbitMqPassword}@{_rabbitMqHost}", $"{_customerNo}-eform-service-outer-inner-resource-plugin"))
+            .Options(o =>
+            {
+                o.SetMaxParallelism(_maxParallelism);
+                o.SetNumberOfWorkers(_numberOfWorkers);
+            })
+            .Start();
 
-        public void Install(IWindsorContainer container, IConfigurationStore store)
-        {
-            Console.WriteLine($"rabbitMqUser: {_rabbitMqUser}");
-            Console.WriteLine($"rabbitMqPassword: {_rabbitMqPassword}");
-            Console.WriteLine($"rabbitMqHost: {_rabbitMqHost}");
-            Configure.With(new CastleWindsorContainerAdapter(container))
-                .Logging(l => l.ColoredConsole(LogLevel.Info))
-                .Transport(t => t.UseRabbitMq($"amqp://{_rabbitMqUser}:{_rabbitMqPassword}@{_rabbitMqHost}", $"{_customerNo}-eform-service-outer-inner-resource-plugin"))
-                .Options(o =>
-                {
-                    o.SetMaxParallelism(_maxParallelism);
-                    o.SetNumberOfWorkers(_numberOfWorkers);
-                })
-                .Start();
-
-        }
     }
 }

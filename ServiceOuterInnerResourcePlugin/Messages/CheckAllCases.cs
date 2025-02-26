@@ -1,12 +1,11 @@
-namespace ServiceOuterInnerResourcePlugin.Messages
-{
-    public class CheckAllCases
-    {
-        public int eFormId { get; }
+namespace ServiceOuterInnerResourcePlugin.Messages;
 
-        public CheckAllCases(int eFormId)
-        {
-            this.eFormId = eFormId;
-        }
+public class CheckAllCases
+{
+    public int eFormId { get; }
+
+    public CheckAllCases(int eFormId)
+    {
+        this.eFormId = eFormId;
     }
 }

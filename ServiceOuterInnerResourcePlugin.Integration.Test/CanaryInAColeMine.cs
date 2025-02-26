@@ -1,6 +1,6 @@
 /*
 The MIT License (MIT)
-Copyright (c) 2007 - 2019 Microting A/S
+Copyright (c) 2007 - 2025 Microting A/S
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -20,15 +20,14 @@ SOFTWARE.
 
 using NUnit.Framework;
 
-namespace ServiceMachineAreaPlugin.Integration.Test
+namespace ServiceMachineAreaPlugin.Integration.Test;
+
+[TestFixture]
+public class CanaryInAColeMine
 {
-    [TestFixture]
-    public class CanaryInAColeMine
+    [Test]
+    public void CanPeep()
     {
-        [Test]
-        public void CanPeep()
-        {
-            Assert.That(true);
-        }
+        Assert.That(true);
     }
 }
