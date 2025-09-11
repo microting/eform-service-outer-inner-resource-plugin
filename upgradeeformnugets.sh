@@ -3,11 +3,49 @@
 GIT_STATUS=`git status | grep "nothing to commit, working tree clean" | wc -l`
 if (( "$GIT_STATUS" > 0 )); then
 	git pull
-	cd ServiceOuterInnerResourcePlugin
   CURRENT_NUMBER_OF_COMMITS=`git log --oneline | wc -l`
 
+	cd ServiceOuterInnerResourcePlugin
 	PACKAGES=('Microting.eForm' 'Microting.eFormApi.BasePn' 'Microting.eFormOuterInnerResourceBase')
 	PROJECT_NAME='ServiceOuterInnerResourcePlugin.csproj'
+	REPOSITORY='eform-service-outer-inner-resource-plugin'
+
+	for PACKAGE_NAME in ${PACKAGES[@]}; do
+
+		OLD_VERSION=`dotnet list package | grep "$PACKAGE_NAME " | grep -oP ' \d\.\d+\.\d.*' | grep -oP ' \d.* \b' | xargs`
+
+		dotnet add $PROJECT_NAME package $PACKAGE_NAME
+
+		NEW_VERSION=`dotnet list package | grep "$PACKAGE_NAME " | grep -oP ' \d\.\d+\.\d.*$' | grep -oP '\d\.\d+\.\d.*$' | grep -oP ' \d\.\d+\.\d.*$' | xargs`
+
+		if [ $NEW_VERSION != $OLD_VERSION ]; then
+		  echo "We have a new version of $PACKAGE_NAME, so creating github issue and do a commit message to close that said issue"
+		  RESULT=`curl -X "POST" "https://api.github.com/repos/microting/$REPOSITORY/issues?state=all" \
+		     -H "Cookie: logged_in=no" \
+		     -H "Authorization: token $CHANGELOG_GITHUB_TOKEN" \
+		     -H "Content-Type: text/plain; charset=utf-8" \
+		     -d $'{
+		  "title": "Bump '$PACKAGE_NAME' from '$OLD_VERSION' to '$NEW_VERSION'",
+		  "body": "TBD",
+		  "assignees": [
+		    "renemadsen"
+		  ],
+		  "labels": [
+		    ".NET",
+		    "backend",
+		    "enhancement"
+		  ]
+		}'`
+			ISSUE_NUMBER=`echo $RESULT | grep -oP 'number": \d+,' | grep -oP '\d+'`
+		  git add .
+		  git commit -a -m "closes #$ISSUE_NUMBER"
+		fi
+	done
+
+	cd ..
+	cd ServiceOuterInnerResourcePlugin.Integration.Test
+	PACKAGES=('Microsoft.NET.Test.Sdk' 'NUnit' 'NUnit3TestAdapter' 'NUnit.Analyzers')
+	PROJECT_NAME='ServiceOuterInnerResourcePlugin.Integration.Test.csproj'
 	REPOSITORY='eform-service-outer-inner-resource-plugin'
 
 	for PACKAGE_NAME in ${PACKAGES[@]}; do
