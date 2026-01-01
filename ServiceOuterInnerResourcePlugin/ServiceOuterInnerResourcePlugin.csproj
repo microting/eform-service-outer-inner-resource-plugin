@@ -19,7 +19,7 @@
       <PackageReference Include="Microting.eFormApi.BasePn" Version="9.0.65" />
       <PackageReference Include="Microting.eFormOuterInnerResourceBase" Version="10.0.0" />
       <PackageReference Include="Microting.WindowsService.BasePn" Version="2.0.0" />
-      <PackageReference Include="System.ComponentModel.Composition" Version="9.0.10" />
+      <PackageReference Include="System.ComponentModel.Composition" Version="10.0.1" />
     </ItemGroup>
 
 </Project>
