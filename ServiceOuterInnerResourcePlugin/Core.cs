@@ -26,6 +26,8 @@ using System.Threading;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microting.eForm.Dto;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data;
 using Microting.eFormOuterInnerResourceBase.Infrastructure.Data.Factories;
@@ -129,7 +131,11 @@ public class Core : ISdkEventHandler
                 _dbContext = _dbContextHelper.GetDbContext();//.CreateDbContext(new[] { connectionString });
 
                 //_dbContextHelper = new DbContextHelper(connectionString);
-                _dbContext.Database.Migrate();
+                var historyRepo = _dbContext.GetService<IHistoryRepository>();
+                if (!historyRepo.Exists() || _dbContext.Database.GetPendingMigrations().Any())
+                {
+                    _dbContext.Database.Migrate();
+                }
 
                 _coreAvailable = true;
                 _coreStatChanging = false;
